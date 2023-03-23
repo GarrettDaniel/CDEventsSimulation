@@ -12,7 +12,24 @@ CD Event Example:
 
 ![image](https://user-images.githubusercontent.com/36463300/227051894-0f57fd81-a546-490a-88b3-82254d2b5d5b.png)
 
-Architecture Overview: (TODO: Add Architecture Diagram)
+Architecture Overview:
+![CDEvents Simulation AWS Arch drawio](https://user-images.githubusercontent.com/36463300/227257049-b562eb4e-985b-4a20-a746-e8652809ac6b.png)
+
+
+Current Progress:
+- Created realistic simulated CDEvents
+- Wrote and documented functions to create and send events to S3
+- Setup S3 bucket and event notifications for raw data upload
+- Created an SQS queue and dead-letter queue for the event notifications to be polled
+- Updated the SQS access policy to allow for event notifications from S3
+- Created architecture diagram
+
+Need To Do:
+- Document class definitions and functions
+- Create a Lambda function to process CDEvents by polling the SQS queue
+- Crawl the data with Glue
+- Query with Athena
+- Visualize wtih PowerBI
 
 Possible Improvements:
 - Replace SQS and Lambda with Kinesis Firehose and Lambda to direct and transform near real-time batches of data (~1 minute intervals)
