@@ -24,6 +24,7 @@ Current Progress:
 - Updated the SQS access policy to allow for event notifications from S3
 - Created architecture diagram
 - Wrote function to process events and join them together in a CSV file for analysis and reporting
+- Documented all classes, functions, and code
 
 Need To Do:
 - Document class definitions and functions
