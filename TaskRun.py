@@ -23,6 +23,7 @@ class TaskRun():
             It is only instantiated when a simulated CDEvent has an event_type of taskRun.  Otherwise, it will create a
             `PipelineRun` object (see `PipelineRun.py`).
         '''
+        
         self.cdevent = cdevent
         self.id = str(uuid.uuid4())
         self.source = cdevent.source
