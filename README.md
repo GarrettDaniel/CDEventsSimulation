@@ -8,9 +8,10 @@ Goals:
 - Catalog data schema with Glue Crawlers and query with Athena
 - Build a PowerBI Dashboard to show CD stats per user, pipeline, etc.
 
-CD Event Example:
+CD Event Example (Original/Raw vs. Processed/Flattened:
 
-![image](https://user-images.githubusercontent.com/36463300/227051894-0f57fd81-a546-490a-88b3-82254d2b5d5b.png)
+![image](https://user-images.githubusercontent.com/36463300/227565258-720cc6e0-72e1-4dd8-a691-4cbb4b71b965.png)
+
 
 Architecture Overview:
 ![CDEvents Simulation AWS Arch drawio](https://user-images.githubusercontent.com/36463300/227257049-b562eb4e-985b-4a20-a746-e8652809ac6b.png)
@@ -23,6 +24,7 @@ Current Progress:
 - Created an SQS queue and dead-letter queue for the event notifications to be polled
 - Updated the SQS access policy to allow for event notifications from S3
 - Created architecture diagram
+- Wrote function to process events and join them together in a CSV file for analysis and reporting
 
 Need To Do:
 - Document class definitions and functions
