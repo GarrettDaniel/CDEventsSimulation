@@ -8,14 +8,13 @@ Goals:
 - Catalog data schema with Glue Crawlers and query with Athena
 - Build a PowerBI Dashboard to show CD stats per user, pipeline, etc.
 
-CD Event Example (Original/Raw vs. Processed/Flattened:
-
-![image](https://user-images.githubusercontent.com/36463300/227565258-720cc6e0-72e1-4dd8-a691-4cbb4b71b965.png)
-
-
 Architecture Overview:
 ![CDEvents Simulation AWS Arch drawio](https://user-images.githubusercontent.com/36463300/227257049-b562eb4e-985b-4a20-a746-e8652809ac6b.png)
 
+
+CD Event Example (Original/Raw vs. Processed/Flattened:
+
+![image](https://user-images.githubusercontent.com/36463300/227565258-720cc6e0-72e1-4dd8-a691-4cbb4b71b965.png)
 
 Current Progress:
 - Created realistic simulated CDEvents
