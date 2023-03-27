@@ -48,11 +48,12 @@ class PipelineRun():
                 
                 possible_errors = ['Invalid input param 123', 'Timeout during execution', 'pipelineRun cancelled by user', 'Unknown error']
                 self.errors = random.choices(possible_errors, weights=(10, 30, 30, 30), k=1)[0]
+                self.entry['run_errors'] = self.errors
                 
             elif self.outcome is 'failure':
                 
                 self.errors = "Unit tests failed"
-                self.entry['errors'] = self.errors
+                self.entry['run_errors'] = self.errors
         
         return
     
