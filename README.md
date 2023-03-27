@@ -25,13 +25,13 @@ Current Progress:
 - Created architecture diagram
 - Wrote function to process events and join them together in a CSV file for analysis and reporting
 - Documented all classes, functions, and code
+- Created a first draft Power BI Dashboard of Users, Environments, and Run Outcomes
 
 Need To Do:
-- Document class definitions and functions
 - Create a Lambda function to process CDEvents by polling the SQS queue
 - Crawl the data with Glue
 - Query with Athena
-- Visualize wtih PowerBI
+- Visualize wtih PowerBI (in progress)
 
 Possible Improvements:
 - Instead of generating event state, type, etc. completely randomly, simulate each event going through its full lifecycle so you can actually track the full timeline of an event, predict if it's likely to fail or not, etc.
