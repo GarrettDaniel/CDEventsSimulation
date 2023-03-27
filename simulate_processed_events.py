@@ -102,10 +102,10 @@ def flatten_event(event):
     ## These sections will only be populated if the event is in the `failure` or `error` state
     if 'run_outcome' not in flattened_event.keys():
         flattened_event['run_outcome'] = None
-        flattened_event['errors'] = None
+        flattened_event['run_errors'] = None
     
     if 'run_errors' not in flattened_event.keys():
-        flattened_event['errors'] = None
+        flattened_event['run_errors'] = None
     
     return flattened_event
     
