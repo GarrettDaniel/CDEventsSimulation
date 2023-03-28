@@ -27,12 +27,11 @@ Current Progress:
 - Documented all classes, functions, and code
 - Created a first draft Power BI Dashboard of Users, Environments, and Run Outcomes
 - Created a Lambda function to process CDEvents by polling the SQS queue
+- Debugged the Lambda function
+- Crawl the processed data with Glue
+- Query with Athena
 
 Need To Do:
-- Figure out why the Lambda function is not polling the SQS queue properly (look through CloudWatch logs for errors)
-- Reset the message retention period back to 4 days
-- Crawl the data with Glue
-- Query with Athena
 - Visualize wtih PowerBI (in progress)
 
 Possible Improvements:
