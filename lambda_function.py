@@ -1,4 +1,5 @@
 import json
+import csv
 import boto3
 
 s3 = boto3.client("s3")
@@ -65,8 +66,6 @@ def flatten_event(event):
         and to practice creating dashboards and analyses.  It does not interact with AWS in any way.
     '''
     
-    print("Incoming Event:,\n", event)
-    
     flattened_event = {}
     flattened_event['event_id'] = event['event_id']
     
@@ -124,7 +123,7 @@ def send_event(event):
     '''
     
     json_filename = "{}.json".format(event['event_id'])
-    json_event = json.dumps(event, indent=4)
+    json_event = json.dumps(event)
     
     print("Sending event to: s3://{}/{}{}".format(bucket_name, s3_folder, json_filename))
     response = s3.put_object(
@@ -134,10 +133,27 @@ def send_event(event):
     )
     
     return response
+    
+def get_event_body(event):
+    
+    print("Incoming Event:,\n", event)
+    
+     # User these lines if you use SQS as the trigger #
+    body_dict = json.loads(event['Records'][0]['body'])
+    print("Event Body:\n", json.dumps(body_dict))
+    
+    key = body_dict['Records'][0]['s3']['object']['key']
+    obj = s3.get_object(Bucket=bucket_name, Key=key)
+    event_body = json.loads(obj['Body'].read())
+    
+    print("Event Body:\n", event_body)
+    
+    return event_body
 
 def lambda_handler(event, context):
     
-    flattened_event = flatten_event(event)
-    response = send_event(flattened_event)
+    event_body = get_event_body(event)
+    flattened_event_body = flatten_event(event_body)
+    response = send_event(flattened_event_body)
     
     return response
