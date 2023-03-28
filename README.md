@@ -33,11 +33,10 @@ Current Progress:
 
 Need To Do:
 - Visualize wtih PowerBI (in progress)
+- Instead of generating event state, type, etc. completely randomly, simulate each event going through its full lifecycle so you can actually track the full timeline of an event, predict if it's likely to fail or not, etc.
 - Create a Terraform config file with Terraformer to automate infrastructure deployment
 
 Possible Improvements:
-- Instead of generating event state, type, etc. completely randomly, simulate each event going through its full lifecycle so you can actually track the full timeline of an event, predict if it's likely to fail or not, etc.
 - Replace SQS and Lambda with Kinesis Firehose and Lambda to direct and transform near real-time batches of data (~1 minute intervals)
 - Connect PowerBI directly to data in S3 using the Glue Data Catalog to allow for real-time dashboard updates
-- Add additional event types and data, such as pipeline run-time
 - Partition data by year > month > day and store in parquet format to improve compression and query performance
