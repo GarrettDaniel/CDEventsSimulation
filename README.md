@@ -33,6 +33,7 @@ Current Progress:
 
 Need To Do:
 - Visualize wtih PowerBI (in progress)
+- Create a Terraform config file with Terraformer to automate infrastructure deployment
 
 Possible Improvements:
 - Instead of generating event state, type, etc. completely randomly, simulate each event going through its full lifecycle so you can actually track the full timeline of an event, predict if it's likely to fail or not, etc.
