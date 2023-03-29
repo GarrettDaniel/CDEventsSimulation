@@ -29,7 +29,7 @@ class PipelineRun():
         self.source = cdevent.source
         self.type = "pipelineRun"
         self.pipelineName = random.choices(['pipeline1', 'pipeline2', 'pipeline3', 'pipeline4'], weights=(10,20,50,30), k=1)[0]
-        self.url = "https://api.example_stystem.com/namespace/{}".format(self.pipelineName)
+        self.url = "https://api.example_system.com/namespace/{}".format(self.pipelineName)
         
         self.entry = {
             "id": self.id,
