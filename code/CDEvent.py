@@ -8,7 +8,7 @@ from TaskRun import TaskRun
 ## Based on CDEvents Subjects https://github.com/cdevents/spec/blob/main/spec.md#source-subject
 
 class CDEvent():
-    def __init__(self):
+    def __init__(self, **kwargs):
         '''
         Input: None
         Returns: object (dtype: CDEvent) An object in the format of a standard CDEvent (see https://github.com/cdevents/spec/blob/main/spec.md):
@@ -45,19 +45,67 @@ class CDEvent():
             they are all fictitious, but follow the same format of standard CDEvents naming conventions and styling.
         '''
         
-        self.user = random.choices(['userA', 'userB', 'userC'], weights=(30,20,50), k=1)[0]
-        self.environment = random.choices(['dev', 'staging', 'prod'], weights=(40,40,20), k=1)[0]
-        self.event_type = random.choices(['pipelineRun','taskRun'], weights=(30,70), k=1)[0]
-        self.event_name = random.choices(['{}1'.format(self.event_type), '{}2'.format(self.event_type), '{}3'.format(self.event_type)], weights=(20, 60, 20), k=1)[0]
-        
-        if self.event_type == "pipelineRun":
-            self.event_state = random.choices(['queued', 'started', 'finished'], weights=(20,40,40), k=1)[0]
+        ## Option 1: If we give the CDEvent constructor a previous CDEvent to go off of
+        if len(kwargs) > 0:
+            self.original_event = kwargs['kwargs']
+            self.taskRun = self.original_event.taskRun
+            self.pipelineRun = self.original_event.pipelineRun
+            
+            self.user = self.original_event.user
+            self.environment = self.original_event.environment
+            self.event_type = self.original_event.event_type
+            self.event_name = self.original_event.event_name
+            self.event_type = self.original_event.event_type
+            
+            if self.original_event.event_state == 'queued':
+                self.event_state = 'started'
+            elif self.original_event.event_state == 'started':
+                self.event_state = 'finished'
+            else: ## This would be unknown input.  Deal with this when creating events
+                self.event_state = 'unknown'
+            
+            ## Populate subject from original event
+            self.subject = self.original_event.subject
+            self.id = self.original_event.id
+            self.task = self.original_event.task
+            self.url = self.original_event.url
+            
+            ## Populate context from original event
+            self.context = self.original_event.context
+            self.context['type'] = self.original_event.context['type'].replace(self.original_event.event_state, self.event_state)
+            self.version = self.original_event.version
+            self.context_id = self.original_event.context_id
+            self.source = self.original_event.source
+            self.type = self.original_event.type
+            
+            ## change context timestamp to simulate run-time of the task
+            original_timestamp = datetime.strptime(self.original_event.timestamp, '%Y-%m-%d %H:%M:%S.%f')
+            run_time_seconds = abs(np.random.normal(loc=120, scale=20))
+            new_timestamp = original_timestamp + timedelta(seconds = run_time_seconds)
+
+            self.timestamp = str(new_timestamp)
+            self.context['timestamp'] = self.timestamp
+
+        ## Option 2: We are creating a new task/event
         else:
-            self.event_state = random.choices(['started', 'finished'], weights=(50,50), k=1)[0]
+            self.original_event = None
+            self.taskRun = None
+            self.pipelineRun = None
+            
+            self.user = random.choices(['userA', 'userB', 'userC'], weights=(30,20,50), k=1)[0]
+            self.environment = random.choices(['dev', 'staging', 'prod'], weights=(40,40,20), k=1)[0]
+            self.event_type = random.choices(['pipelineRun','taskRun'], weights=(30,70), k=1)[0]
+            self.event_name = random.choices(['{}1'.format(self.event_type), '{}2'.format(self.event_type), '{}3'.format(self.event_type)], weights=(20, 60, 20), k=1)[0]
+            
+            if self.event_type == 'taskRun':
+                self.event_state = 'started'
+            else:
+                self.event_state = random.choices(['queued', 'started'], weights=(30,60), k=1)[0]
+            
+            self.subject = self.create_subject()
+            self.context = self.create_context()
         
-        self.subject = self.create_subject()
-        self.context = self.create_context()
-        
+        ## Either way this logic is the same, regardless of if we provide a previous CDEvent to the constructor or not.
         self.entry = {}
         self.entry['context'] = self.context
         self.entry['subject'] = self.subject
