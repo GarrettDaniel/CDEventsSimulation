@@ -20,7 +20,7 @@ Current Progress:
 - Created realistic simulated CDEvents
 - Wrote and documented functions to create and send events to S3
 - Setup S3 bucket and event notifications for raw data upload
-- Created an SQS queue and dead-letter queue for the event notifications to be polled
+- Created an SQS queue and dead-letter queue (DLQ) for the event notifications to be polled
 - Updated the SQS access policy to allow for event notifications from S3
 - Created architecture diagram
 - Wrote function to process events and join them together in a CSV file for analysis and reporting
@@ -30,10 +30,14 @@ Current Progress:
 - Debugged the Lambda function
 - Crawl the processed data with Glue
 - Query with Athena
+- Refactored the event data simulation to follow a single event from 'started'/'queued' until 'finished' and simulate the runtime for each task.
+
 
 Need To Do:
-- Visualize wtih PowerBI (in progress)
-- Instead of generating event state, type, etc. completely randomly, simulate each event going through its full lifecycle so you can actually track the full timeline of an event, predict if it's likely to fail or not, etc.
+- Visualize wtih PowerBI: visualize time for tasks to complete
+- Create new simulated data files for GitHub
+- Write Unit tests for data simulation
+- Debug why Lamda will miss a few events when trying to process the incoming raw events even though there don't seem to be errors occuring (why isn't it sending messages to the DLQ for retrying?)
 - Create a Terraform config file with Terraformer to automate infrastructure deployment
 
 Possible Improvements:
