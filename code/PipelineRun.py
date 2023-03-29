@@ -25,19 +25,36 @@ class PipelineRun():
         '''
         
         self.cdevent = cdevent
-        self.id = str(uuid.uuid4())
-        self.source = cdevent.source
-        self.type = "pipelineRun"
-        self.pipelineName = random.choices(['pipeline1', 'pipeline2', 'pipeline3', 'pipeline4'], weights=(10,20,50,30), k=1)[0]
-        self.url = "https://api.example_system.com/namespace/{}".format(self.pipelineName)
         
-        self.entry = {
-            "id": self.id,
-            "source": self.source,
-            "type": self.type,
-            "pipelineName": self.pipelineName,
-            "url": self.url
-        }
+        if cdevent.pipelineRun is None:
+            self.id = str(uuid.uuid4())
+            self.source = cdevent.source
+            self.type = "pipelineRun"
+            self.pipelineName = random.choices(['pipeline1', 'pipeline2', 'pipeline3', 'pipeline4'], weights=(10,20,50,30), k=1)[0]
+            self.url = "https://api.example_system.com/namespace/{}".format(self.pipelineName)
+            
+            self.entry = {
+                "id": self.id,
+                "source": self.source,
+                "type": self.type,
+                "pipelineName": self.pipelineName,
+                "url": self.url
+            }
+            
+        else:
+            self.id = cdevent.pipelineRun.id
+            self.source = cdevent.source
+            self.type = "pipelineRun"
+            self.pipelineName = cdevent.pipelineRun.pipelineName
+            self.url = cdevent.pipelineRun.url
+            
+            self.entry = {
+                "id": self.id,
+                "source": self.source,
+                "type": self.type,
+                "pipelineName": self.pipelineName,
+                "url": self.url
+            }
         
         if cdevent.event_state == "finished":
             
