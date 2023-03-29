@@ -41,6 +41,80 @@ s3_folder = "raw/"
 
 ## Step 3a: Create functions for making records and sending them to S3
 
+def create_event_lifecycle(events_list, ids_list):
+    '''
+    Input:
+        `events_list` (dtype: list): A list of all CDEvents with a unique event_id for each event
+            as the key, and the full event as the value (i.e. {event_id: CDEvent})
+        `ids_list` (dtype: list): A list of all the event_ids created for each CDEvent
+    
+    Function Overview:
+        Based on CDEvents Subjects: https://github.com/cdevents/spec/blob/main/spec.md
+        This function will create simulated CDEvents following this style, for a single full
+        runthrough of a task from the 'started'/'queued' state until the 'finished' state:
+        {
+            "context": {
+                "version": "0.0.2",
+                "id": "6d8f3fc7-f2c2-4511-badc-362d318d2d70",
+                "source": "/staging/userC/",
+                "type": "staging.simulated_events.taskRun.finished",
+                "timestamp": "2023-03-22 21:34:25.586944"
+            },
+            "subject": {
+                "id": "bbfaf73e-c7af-4cd9-883c-5267c764e25c",
+                "type": "taskRun",
+                "content": {
+                    "task": "task3",
+                    "url": "/apis/userC.staging/veta/namespaces/default/taskRuns/taskRun2",
+                    "taskRun": {
+                        "id": "a25a5e3d-5244-4df5-865d-c59a7f938308",
+                        "source": "/staging/userC/",
+                        "type": "taskRun",
+                        "pipelineName": "pipeline3",
+                        "url": "https://api.example_stystem.com/namespace/pipeline3",
+                        "outcome": "failure",
+                        "errors": "Unit tests failed"
+                    }
+                }
+            }
+        }
+        
+        It will store these event entries in a list `events_list`
+        and store the event ids in a list `ids_list`.
+    
+    Returns: 
+        `events_list` (dtype: list): A list of all CDEvents with a unique event_id for each event
+            as the key, and the full event as the value (i.e. {event_id: CDEvent})
+        `ids_list` (dtype: list): A list of all the event_ids created for each CDEvent
+    
+    '''
+    event_entry = {}
+    event_id = str(uuid.uuid4())
+    
+    original_event = CDEvent()
+    event_entry = original_event.entry
+    event_entry['event_id'] = event_id
+    
+    events_list.append(event_entry)
+    ids_list.append(event_id)
+    
+    while True:
+        next_event_id = str(uuid.uuid4())
+        next_event = CDEvent(kwargs=original_event)
+        next_event_entry = next_event.entry
+        next_event_entry['event_id'] = next_event_id
+        
+        original_event = next_event
+        
+        events_list.append(next_event_entry)
+        ids_list.append(next_event_id)
+        
+        if next_event.event_state == "finished":
+            break    
+    
+    return events_list, ids_list
+
+
 def create_events(num_events):
     '''
     Input:
@@ -90,14 +164,7 @@ def create_events(num_events):
     ids_list = []
     
     for i in range(num_events):
-        event_entry = {}
-        event_id = str(uuid.uuid4())
-        
-        new_event = CDEvent()
-        event_entry[event_id] = new_event.entry
-        
-        events_list.append(event_entry)
-        ids_list.append(event_id)
+        events_list, ids_list = create_event_lifecycle(events_list, ids_list)
     
     return events_list, ids_list
 
@@ -165,8 +232,19 @@ def create_and_send_events(num_events, bucket_name):
     
 ## Step 3b: Run the function to create and send events to S3
 
-for i in range(300):
+all_events = []
+
+for i in range(50):
     
-    events_list, ids_list, responses_map = create_and_send_events(num_events=3, bucket_name=bucket_name)
+    events_list, ids_list, responses_map = create_and_send_events(num_events=1, bucket_name=bucket_name)
+    
+    all_events.extend(events_list)
     
     time.sleep(1)
+
+# Serializing json
+json_object = json.dumps(all_events, indent=4)
+ 
+# Writing to sample.json
+with open("simulated_raw_events.json", "w") as outfile:
+    outfile.write(json_object)
