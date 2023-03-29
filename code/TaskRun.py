@@ -39,6 +39,38 @@ class TaskRun():
             "url": self.url
         }
         
+        self.cdevent = cdevent
+        
+        if cdevent.taskRun is None:
+            self.id = str(uuid.uuid4())
+            self.source = cdevent.source
+            self.type = "taskRun"
+            self.pipelineName = random.choices(['pipeline1', 'pipeline2', 'pipeline3', 'pipeline4'], weights=(10,20,50,30), k=1)[0]
+            self.url = "https://api.example_system.com/namespace/{}".format(self.pipelineName)
+            
+            self.entry = {
+                "id": self.id,
+                "source": self.source,
+                "type": self.type,
+                "pipelineName": self.pipelineName,
+                "url": self.url
+            }
+            
+        else:
+            self.id = cdevent.taskRun.id
+            self.source = cdevent.source
+            self.type = "taskRun"
+            self.pipelineName = cdevent.taskRun.pipelineName
+            self.url = cdevent.taskRun.url
+            
+            self.entry = {
+                "id": self.id,
+                "source": self.source,
+                "type": self.type,
+                "pipelineName": self.pipelineName,
+                "url": self.url
+            }
+        
         if cdevent.event_state == "finished":
             
             self.outcome = random.choices(['success', 'error', 'failure'], weights=(50, 30, 20), k=1)[0]
