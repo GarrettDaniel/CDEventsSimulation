@@ -269,12 +269,12 @@ def flatten_event_entry(event_entry):
         "content_task": "task3",
         "content_url": "/apis/userC.dev/veta/namespaces/default/pipelineRuns/pipelineRun3",
         "run_id": "pipelineRunID123",
-        "run_source": "source": "/dev/userC/",
-        "run_type": "type": "pipelineRun",
+        "run_source": "/dev/userC/",
+        "run_type": "pipelineRun",
         "run_pipelineName": "pipeline3",
-        "run_url": "https://api.example.com/namespace/pipeline3"
-        "run_outcome": null (or one of ['success', 'error', 'failure'])
-        "errors": null (or one of ['Invalid input param 123', 'Timeout during execution', 'pipelineRun cancelled by user', 'Unknown error', 'Unit tests failed']
+        "run_url": "https://api.example.com/namespace/pipeline3",
+        "run_outcome": 'error',
+        "errors": 'Timeout during execution'
     }
     
     Function Overview:
