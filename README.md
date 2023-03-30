@@ -36,7 +36,7 @@ Current Progress:
 
 Need To Do:
 - Visualize wtih PowerBI: visualize time for tasks to complete
-- Write Unit tests for data simulation
+- Write Unit tests for data simulation, CDEvent (in progress), TaskRun, and PipelineRun
 - Debug why Lambda will miss a few events when trying to process the incoming raw events even though there don't seem to be errors occuring (why isn't it sending messages to the DLQ for retrying?)
 - Create a Terraform config file with Terraformer to automate infrastructure deployment
 
