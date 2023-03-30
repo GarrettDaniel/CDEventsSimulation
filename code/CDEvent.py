@@ -18,7 +18,7 @@ class CDEvent():
                     "id": "CDEventID123",
                     "source": "/dev/userC/",
                     "type:" "dev.simulated_events.pipelineRun.queued",
-                    timestamp": "2023-03-24 10:55:33.124459"
+                    "timestamp": "2023-03-24 10:55:33.124459"
                 },
                 "subject": {
                     "id": "subjectID123",
