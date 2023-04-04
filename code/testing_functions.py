@@ -7,8 +7,19 @@ from datetime import datetime
 import json
 from copy import deepcopy
 
-## Helper Functions
+## Helper Functions for Unit Testing CDEvent, PipelineRun, and TaskRun classes
+
 def test_context(context):
+    '''
+    Input: context (type: dict; from: CDEvent.context) This is a context dictionary from the CDEvent.context
+        member variable.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will test the format of the CDEvent.context dictionary to ensure
+        that it meets the standard format from the CDEvent specs.
+    '''
     print("Testing Context:\n", json.dumps(context, indent=4))
     
     expected_context_format = {
@@ -30,6 +41,16 @@ def test_context(context):
     return
 
 def test_subject(subject):
+    '''
+    Input: subject (type: dict; from: CDEvent.subject) This is a subject dictionary from the CDEvent.subject
+        member variable.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will test the format of the CDEvent.subject dictionary to ensure
+        that it meets the standard format from the CDEvent specs.
+    '''
     
     print("Testing Subject:\n", json.dumps(subject, indent=4))
     
@@ -62,6 +83,16 @@ def test_subject(subject):
     return
 
 def test_content(content):
+    '''
+    Input: content (type: dict; from: CDEvent.content) This is a content dictionary from the CDEvent.content
+        member variable.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will test the format of the CDEvent.content dictionary to ensure
+        that it meets the standard format from the CDEvent specs.
+    '''
     
     print("Testing content:\n", json.dumps(content, indent=4))
     
@@ -90,6 +121,16 @@ def test_content(content):
     return
 
 def test_event_state(event_state):
+    '''
+    Input: event_state (type: str; from: CDEvent.event_state) This is a string from the CDEvent.event_state
+        member variable, indicating what state the CDEvent is in.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will confirm that the current event_state of the CDEvent you are testing
+        is a valid state, according to the CDEvent specs.
+    '''
     
     possible_states = ['queued', 'started', 'finished']
     
@@ -98,7 +139,49 @@ def test_event_state(event_state):
     
     return
 
+def test_event_type(event_type, event):
+    '''
+    Input: 
+        event_type (type: str; from: CDEvent.event_type) This is a string from the CDEvent.event_state
+        member variable, indicating what state the CDEvent is in.
+        
+        event (type: CDEvent)
+        
+    Returns: None
+    
+    Function Overview:
+        This function will confirm that the current event_state of the CDEvent you are testing
+        is a valid state, according to the CDEvent specs.
+    '''
+    
+    possible_types = ['pipelineRun', 'taskRun']
+    
+    if event_type not in possible_types:
+        raise ValueError("Unexpected event_type:", event_type, "\nExpected event_type in", possible_types)
+    
+    if event_type == 'pipelineRun':
+        if event.pipelineRun is None:
+            raise ValueError("Missing pipelineRun object")
+            
+        test_pipelineRun_format(pipelineRun_entry=event.pipelineRun.entry)
+    else:
+        if event.taskRun is None:
+            raise ValueError("Missing taskRun object")
+        test_taskRun_format(taskRun_entry=event.taskRun.entry)
+        
+    return
+
 def test_taskRun_format(taskRun_entry):
+    '''
+    Input: taskRun_entry (type: dict; from: CDEvent.taskRun.entry) This is a TaskRun.entry 
+        dictionary from the CDEvent.taskRun.entry member variable.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will test the format of the CDEvent.taskRun.entry dictionary to ensure
+        that it meets the standard format from the CDEvent specs.
+    '''
     
     print("Testing taskRun:\n", json.dumps(taskRun_entry, indent=4))
     
@@ -126,6 +209,16 @@ def test_taskRun_format(taskRun_entry):
     return
 
 def test_pipelineRun_format(pipelineRun_entry):
+    '''
+    Input: pipelineRun_entry (type: dict; from: CDEvent.pipelineRun.entry) This is a PipelineRun.entry 
+        dictionary from the CDEvent.pipelineRun.entry member variable.
+        
+    Returns: None
+    
+    Function Overview:
+        This function will test the format of the CDEvent.pipelineRun.entry dictionary to ensure
+        that it meets the standard format from the CDEvent specs.
+    '''
     
     expected_pipelineRun_entry_format = {
         "id": "a25a5e3d-5244-4df5-865d-c59a7f938308",
@@ -149,92 +242,3 @@ def test_pipelineRun_format(pipelineRun_entry):
         raise ValueError("Incorrect event_type:", pipelineRun_entry['type'], "\nExpected event_type = pipelineRun")
     
     return
-    
-def test_event_type(event_type, event):
-    
-    possible_types = ['pipelineRun', 'taskRun']
-    
-    if event_type not in possible_types:
-        raise ValueError("Unexpected event_type:", event_type, "\nExpected event_type in", possible_types)
-    
-    if event_type == 'pipelineRun':
-        if event.pipelineRun is None:
-            raise ValueError("Missing pipelineRun object")
-            
-        test_pipelineRun_format(pipelineRun_entry=event.pipelineRun.entry)
-    else:
-        if event.taskRun is None:
-            raise ValueError("Missing taskRun object")
-        test_taskRun_format(taskRun_entry=event.taskRun.entry)
-        
-    return
-
-class TestCDEvent(unittest.TestCase):
-    
-    def test_cdevent(self, test_event=None):
-
-        expected_raw_format = {
-            "context": {
-                "version": "0.0.1",
-                "id": "CDEventID123",
-                "source": "/dev/userC/",
-                "type": "dev.simulated_events.pipelineRun.queued",
-                "timestamp": "2023-03-24 10:55:33.124459"
-            },
-            "subject": {
-                "id": "subjectID123",
-                "type": "pipelineRun",
-                "content": {
-                    "task": "task3",
-                    "url": "/apis/userC.dev/veta/namespaces/default/pipelineRuns/pipelineRun3",
-                    "pipelineRun": {
-                        "id": "pipelineRunID123",
-                        "source": "/dev/userC/",
-                        "type": "pipelineRun",
-                        "pipelineName": "pipeline3",
-                        "url": "https://api.example.com/namespace/pipeline3"
-                    }
-                }
-            }
-        }
-        
-        if test_event is None:
-            test_event = CDEvent()
-        
-        test_context(context=test_event.context)
-        test_subject(subject=test_event.subject)
-        test_event_state(event_state=test_event.event_state)
-        test_event_type(event_type=test_event.event_type, event=test_event)
-        
-        return
-        
-    def test_overloaded_cdevent(self):
-        
-        ## Create a test event, and an overloaded event based on the test event
-        test_event_original = CDEvent()
-        test_event_overloaded = CDEvent(kwargs=deepcopy(test_event_original))
-        
-        # Make sure the timestamp for the overloaded event is after the original event
-        original_timestamp = datetime.strptime(test_event_original.timestamp, '%Y-%m-%d %H:%M:%S.%f')
-        overloaded_timestamp = datetime.strptime(test_event_overloaded.timestamp, '%Y-%m-%d %H:%M:%S.%f')
-        self.assertTrue(overloaded_timestamp > original_timestamp)
-        
-        # Check that both events have different event_state
-        self.assertNotEqual(test_event_original.event_state, test_event_overloaded.event_state)
-        
-        # Check that all other member variables are the same
-        self.assertEqual(test_event_original.user, test_event_overloaded.user)
-        self.assertEqual(test_event_original.environment, test_event_overloaded.environment)
-        self.assertEqual(test_event_original.event_type, test_event_overloaded.event_type)
-        self.assertEqual(test_event_original.event_name, test_event_overloaded.event_name)
-        self.assertEqual(test_event_original.version, test_event_overloaded.version)
-        self.assertEqual(test_event_original.context_id, test_event_overloaded.context_id)
-        self.assertEqual(test_event_original.id, test_event_overloaded.id)
-        self.assertEqual(test_event_original.task, test_event_overloaded.task)
-        self.assertEqual(test_event_original.url, test_event_overloaded.url)
-        
-        return
-        
-
-if __name__ == '__main__':
-    unittest.main()
