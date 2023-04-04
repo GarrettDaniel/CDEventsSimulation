@@ -39,11 +39,11 @@
 - Create new simulated data files for GitHub
 - Debugged simulated data code to fix bug with duplicate events (fix: replace shallow copy with deep copy)
 - Wrote unit tests for CDEvent, TaskRun, and PipelineRun classes
+- Wrote unit tests for data simulation and sending data to S3
 
 ***
 ## Need To Do:
 - Visualize wtih PowerBI: visualize time for tasks to complete
-- Write Unit tests for data simulation
 - Debug why Lambda will miss a few events when trying to process the incoming raw events even though there don't seem to be errors occuring (why isn't it sending messages to the DLQ for retrying?)
 - Create a Terraform config file with Terraformer to automate infrastructure deployment
 
