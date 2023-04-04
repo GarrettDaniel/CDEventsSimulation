@@ -40,6 +40,7 @@
 - Debugged simulated data code to fix bug with duplicate events (fix: replace shallow copy with deep copy)
 - Wrote unit tests for CDEvent, TaskRun, and PipelineRun classes
 - Wrote unit tests for data simulation and sending data to S3
+- Reran simulation code to generate full event lifecycle simulations (raw and processed) and uploaded the new datasets
 
 ***
 ## Need To Do:
