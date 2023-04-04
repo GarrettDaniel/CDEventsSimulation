@@ -39,9 +39,28 @@ expected_flat_format = {
 }
 
 class TestSimulations(unittest.TestCase):
-    
+    '''
+    Class Overview:
+        This is a class dedicated to unit testing functionality from `simulation_functions.py`.
+        It will utilize helper functions from `testing_functions.py` to granularly test each element
+        of these various events to ensure that they are created properly before being sent to S3
+        for further processing.  Additional testing for sending raw data to S3 and processing it 
+        are found in `test_simulations.py`.
+    '''
     def test_create_event_lifecycle(self):
+        '''
+        Inputs: None
         
+        Returns: None
+        
+        Function Overview:
+            This test will validate that the full simulated event lifecycle is created properly
+            when creating a set of CDEvents.  This will first make sure that each CDEvent follows
+            the proper format, using similar tests to `test_event_classes.py`.  It will then make
+            sure that no duplicate events were created by ensuring that each id, state, and timestamp
+            are unique.
+        
+        '''
         events_list = []
         ids_list = []
         states_list = []
@@ -73,28 +92,50 @@ class TestSimulations(unittest.TestCase):
         return
     
     def test_flatten_event_entry(self):
+        '''
+        Inputs: None
         
+        Returns: None
+        
+        Function Overview:
+            This test will validate the functionality of `flatten_event_entry` from `simulation_functions.py`.
+            It will first create a CDEvent and assign it an ID.  It wil then flatten the event and verify
+            that the resulting event follows the expected format (see global variable `expected_flat_format`)
+        
+        '''
         original_event = CDEvent()
         original_event.entry['event_id'] = str(uuid.uuid4())
         flattened_event = flatten_event_entry(original_event.entry)
         
         for k, v in flattened_event.items():
         
-            if k not in flattened_event.keys():
-                raise ValueError("{} not in expected format keys: {}".format(k, flattened_event.keys()))
+            if k not in expected_flat_format.keys():
+                raise ValueError("{} not in expected format keys: {}".format(k, expected_flat_format.keys()))
                 
             if k in ['run_outcome', 'errors']:
                 if v is None: 
                     continue
                 self.assertEqual(type(v), str)
             
-            elif type(v) != type(flattened_event[k]):
-                raise ValueError("type({})={} does not match expected type {}".format(k, type(k),type(flattened_event[k])))
+            elif type(v) != type(expected_flat_format[k]):
+                raise ValueError("type({})={} does not match expected type {}".format(k, type(k),type(expected_flat_format[k])))
         
         return
     
     def test_send_events(self):
+        '''
+        Inputs: None
         
+        Returns: None
+        
+        Function Overview:
+            This function will test the `send_events` function from `simulation_functions.py`.  It will first
+            create an event lifecycle, and then attempt to send those events to S3.  It will then check the 
+            status code from the response, and attempt to locate the object in S3.  If the uploads have 200 status
+            codes from the original responses, and the attempt to locate them does not 404 errors, we know
+            the files were uploaded successfully.
+        
+        '''
         events_list = []
         ids_list = []
         
