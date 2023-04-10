@@ -41,6 +41,8 @@
 - Wrote unit tests for CDEvent, TaskRun, and PipelineRun classes
 - Wrote unit tests for data simulation and sending data to S3
 - Reran simulation code to generate full event lifecycle simulations (raw and processed) and uploaded the new datasets
+- Updated PowerBI dashboards to reflect more realistic simulated data
+- Created a Jupyter Notebook showcasing an example question that could be addressed with ML using CDEvent data.
 
 ***
 ## Need To Do:
